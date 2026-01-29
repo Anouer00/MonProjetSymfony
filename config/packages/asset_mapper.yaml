@@ -1,0 +1,11 @@
+framework:
+    asset_mapper:
+        # les chemins à rendre disponibles au mappeur de ressources
+        paths:
+            - assets/
+        missing_import_mode: strict
+
+when@prod:
+    framework:
+        asset_mapper:
+            missing_import_mode: warn

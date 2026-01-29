@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+
+# ce fichier est le point d'entrée pour configurer tes services
+# les fichiers du répertoire packages/ configurent tes dépendances
+# voir aussi https://symfony.com/doc/current/service_container/import.html
+
+# mets ici les paramètres qui ne changent pas selon la machine
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+    # configuration par défaut pour les services de ce fichier
+    _defaults:
+        autowire: true      # injection automatique des dépendances dans tes services
+        autoconfigure: true # enregistrement automatique des services comme commandes, abonnés aux événements, etc.
+
+    # rend les classes du répertoire src/ disponibles en tant que services
+    # cela crée un service par classe dont l'id est le nom complet de la classe
+    App\:
+        resource: '../src/'
+
+    # ajoute plus de définitions de services quand une configuration explicite est nécessaire
+    # attention : les dernières définitions remplacent toujours les précédentes

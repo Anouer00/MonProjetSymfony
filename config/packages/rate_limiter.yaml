@@ -1,0 +1,7 @@
+framework:
+    rate_limiter:
+        # création d'un limiteur pour les accès anonymes ("api_anonymous")
+        api_anonymous:
+            policy: 'fixed_window'
+            limit: 60        # 60 requêtes
+            interval: '1 minute' # chaque minute

@@ -1,0 +1,19 @@
+framework:
+    cache:
+        # nom unique de ton app : utilisé pour calculer des namespaces stables pour les clés de cache
+        #prefix_seed: your_vendor_name/app_name
+
+        # le cache "app" stocke sur le système de fichiers par défaut
+        # les données dans ce cache doivent persister entre les déploiements
+        # autres options disponibles :
+
+        # Redis
+        #app: cache.adapter.redis
+        #default_redis_provider: redis://localhost
+
+        # APCu (non recommandé avec des charges de travail aléatoires et fréquentes car la fragmentation mémoire peut causer des problèmes)
+        #app: cache.adapter.apcu
+
+        # les pools avec namespace utilisent le backend "app" par défaut
+        #pools:
+            #my.dedicated.cache: null

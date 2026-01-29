@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+
+# ce fichier est le point d'entrée pour configurer les routes de ton app
+# les méthodes avec l'attribut #[Route] sont importées automatiquement
+# voir aussi https://symfony.com/doc/current/routing.html
+
+# pour lister toutes les routes enregistrées, exécute la commande :
+#   bin/console debug:router
+
+controllers:
+    resource: routing.controllers

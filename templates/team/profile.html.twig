@@ -1,0 +1,47 @@
+{# templates/team/profile.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ name }}{% endblock %}
+
+{% block body %}
+    <style>
+        .profile-card {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            background-color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 3px solid #007bff;
+        }
+        .profile-card h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .profile-card h2 {
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        .profile-card p {
+            color: #777;
+            line-height: 1.6;
+        }
+    </style>
+
+    <div class="profile-card">
+        <img src="{{ image }}" alt="Photo de {{ name }}" width="150" height="150">
+        <h1>{{ name }}</h1>
+        <h2>{{ role }}</h2>
+        <p>{{ description }}</p>
+        <p><a href="/">Retour à l'accueil</a></p>
+    </div>
+{% endblock %}

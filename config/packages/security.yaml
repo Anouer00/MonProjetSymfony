@@ -1,0 +1,65 @@
+security:
+    # gestion du hachage des mots de passe
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # chargement des utilisateurs dalla base de données
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+        main:
+            lazy: true
+            provider: app_user_provider
+            
+            # vérification du statut du compte (email vérifié ?) avant connexion
+            user_checker: App\Security\UserChecker
+            
+            # authentificateur personnalisé pour le formulaire de login
+            custom_authenticator: App\Security\AppAuthenticator
+            
+            logout:
+                path: app_logout
+                # target: app_any_route
+
+            # protection contre les attaques par force brute (login throttling)
+            login_throttling:
+                max_attempts: 5          # 5 tentatives max
+                interval: '15 minutes'   # blocage temporaire
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 semaine
+                path: /
+
+    # hiérarchie des rôles
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    # contrôle d'accès (important pour l'API)
+    access_control:
+        # routes de l'API v1
+        # lecture publique
+        - { path: ^/api/v1/books$, roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: ^/api/v1/books/\d+$, roles: PUBLIC_ACCESS, methods: [GET] }
+        
+        # modification réservée aux utilisateurs connectés
+        - { path: ^/api/v1/books, roles: ROLE_USER, methods: [POST, PUT] }
+        
+        # suppression réservée aux administrateurs
+        - { path: ^/api/v1/books, roles: ROLE_ADMIN, methods: [DELETE] }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10
