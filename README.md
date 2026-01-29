@@ -1,5 +1,5 @@
-PROJET SYMFONY - TP 7 : MICRO-SERVICE PAIEMENT (STRIPE)
-
+**PROJET SYMFONY - TP 7 : MICRO-SERVICE PAIEMENT (STRIPE)
+**
 [1] DESCRIPTION DU MODULE
 Ce code est un micro-service isolé pour gérer les flux financiers d'une
 marketplace (type Vinted/Leboncoin). Il est totalement indépendant
@@ -63,4 +63,5 @@ POST     | /api/sellers/onboard                  | Création compte vendeur
 GET      | /api/sellers/{id}/status              | Vérif. identité (KYC)
 POST     | /api/payments/intent                  | Paiement (Argent bloqué)
 POST     | /api/payments/{id}/confirm-reception  | Virement au vendeur
+POST     | /api/payments/{id}/refund             | Remboursement (Annulation)
 POST     | /api/webhook                          | Réception événements Stripe
