@@ -1,90 +1,43 @@
-# 📚 API de Gestion de Bibliothèque (Symfony 7.4)
+TP 7 : Micro-service de Paiement (Stripe)
+Branche : tp7
+Auteur : Anouer OUERGHI
 
-**Auteur :** Anouer OUERGHI  
-*Projet réalisé dans le cadre des TP Symfony.*
+-- Description --
+Ce code est un micro-service indépendant pour gérer les paiements d'une marketplace type Vinted.
+Il utilise Stripe Connect (comptes Express) pour gérer les vendeurs.
 
----
+J'ai isolé ce code dans une branche à part car il ne dépend pas du reste de l'appli (User/Book).
 
-## 📌 État du projet (Branches)
+-- Fonctionnement Technique --
+J'utilise le flux "Separate Charges and Transfers" pour gérer le séquestre (Escrow) :
+1. L'acheteur paie -> L'argent est bloqué sur le compte plateforme.
+2. Validation -> L'API calcule la commission (7%) et vire le reste au vendeur.
+3. Sécurité -> Les statuts sont mis à jour via Webhook (signature vérifiée).
 
-L'avancement est séparé en deux branches pour plus de clarté :
+-- Comment tester l'API (Postman) --
 
-* ✅ **`main`** : Contient tout le travail terminé des **TP 1 à 5** (L'API est fonctionnelle, testée et sécurisée).
-* 🚧 **`tp7`** : Sera utilisée pour le développement spécifique du **TP 7**.
+1. Créer un vendeur
+POST /api/sellers/onboard
+Body: {"email": "test@vendeur.com"}
+-> Réponse : URL d'onboarding Stripe (à ouvrir pour valider le compte fictif).
 
----
+2. Initier un paiement
+POST /api/payments/intent
+Body: {"amount": 1000, "seller_id": 1}
+-> Réponse : Crée le paiement en statut PENDING.
 
-## 🚀 Ce que fait l'application
+3. Simuler le paiement (Webhook)
+Comme on est en local, il faut utiliser le CLI Stripe :
+> stripe listen --forward-to localhost:8000/api/webhook
+> stripe trigger payment_intent.succeeded
+-> Résultat : Le statut passe à PAID en base de données.
 
-### 1. API Livres
-Une API REST classique pour gérer une bibliothèque :
-- **Listing** : Pagination et recherche intégrées (`/api/v1/books?q=Titre`).
-- **CRUD** : Création, modification et suppression (protégées par rôles).
-- **Architecture** : Utilisation de **DTOs** et d'un **Mapper** pour garder le code propre et ne pas exposer directement la base de données.
+4. Débloquer l'argent (Transfert)
+POST /api/payments/{id}/confirm-reception
+-> Résultat : Virement effectif vers le vendeur.
 
-### 2. Sécurité
-- **Auth** : Inscription, Login et Logout fonctionnels.
-- **Vérifications** : Un système (`UserChecker`) empêche la connexion si l'email n'est pas vérifié ou si l'utilisateur est banni.
-- **Tracking** : La date de dernière connexion (`lastLogin`) est mise à jour automatiquement.
-- **Rôles** :
-  - `ROLE_USER` : Gestion basique.
-  - `ROLE_ADMIN` : Droit de suppression.
-
-### 3. Les "plus" du projet
-- **Fixtures** : Base de données pré-remplie avec 50 livres et des utilisateurs de test (via Faker).
-- **Versioning** : Routes préfixées par `/api/v1`.
-- **Validation** : Les données envoyées sont strictement contrôlées (ISBN unique, etc.).
-
----
-
-## 🛠️ Choix Techniques
-
-J'ai structuré le projet pour séparer la logique :
-* **Entity** : Les données brutes (`User`, `Book`).
-* **Controller/Api** : Réception des requêtes (reste léger).
-* **Service & DTO** : Toute la logique de transformation des données se passe ici (`BookMapper`).
-* **Stack** : Symfony 7.4, Doctrine, JWT (ou session), Nelmio (Swagger), PHPUnit.
-
----
-
-## ⚙️ Comment lancer le projet
-
-Prérequis : PHP 8.2+, Composer, MySQL.
-
-1.  **Récupérer le code**
-    ```bash
-    git clone [https://github.com/Anouer00/MonProjetSymfony.git](https://github.com/Anouer00/MonProjetSymfony.git)
-    cd MonProjetSymfony
-    ```
-
-2.  **Installer les libs**
-    ```bash
-    composer install
-    ```
-
-3.  **Configurer la BDD**
-    *(Le `.env` est déjà configuré pour MariaDB local avec un timeout étendu)*
-    ```bash
-    php bin/console doctrine:database:create
-    php bin/console doctrine:migrations:migrate
-    ```
-
-4.  **Charger les fausses données**
-    Indispensable pour tester l'API tout de suite :
-    ```bash
-    php bin/console doctrine:fixtures:load --no-interaction
-    ```
-
-5.  **Démarrer**
-    ```bash
-    symfony server:start
-    ```
-
----
-
-## ✅ Tests
-
-Les tests fonctionnels couvrent les endpoints principaux. Pour vérifier que tout est vert :
-
-```bash
-php bin/phpunit
+-- Configuration --
+Renommer .env et ajouter les clés de test Stripe :
+STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
