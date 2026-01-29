@@ -1,9 +1,4 @@
-===========================================================
 PROJET SYMFONY - TP 7 : MICRO-SERVICE PAIEMENT (STRIPE)
-===========================================================
-Branche : tp7
-Auteur  : Anouer OUERGHI
------------------------------------------------------------
 
 [1] DESCRIPTION DU MODULE
 Ce code est un micro-service isolé pour gérer les flux financiers d'une
