@@ -1,5 +1,6 @@
-**PROJET SYMFONY - TP 7 : MICRO-SERVICE PAIEMENT (STRIPE)
-**
+PROJET SYMFONY - TP 7 : MICRO-SERVICE PAIEMENT (STRIPE)
+
+
 [1] DESCRIPTION DU MODULE
 Ce code est un micro-service isolé pour gérer les flux financiers d'une
 marketplace (type Vinted/Leboncoin). Il est totalement indépendant
