@@ -56,7 +56,7 @@ STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 
 
-[5] LISTE DES ENDPOINTS
+[6] LISTE DES ENDPOINTS
 
 METHODE  | URL                                   | DESCRIPTION
 -------- | ------------------------------------- | ------------------------------
